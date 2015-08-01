@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 import os
+import sys
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '#y&mb4cywo5!+@ctucc$-nub+(f)dq8lid!qvjm^)f-5oy2uk6'
@@ -25,6 +26,9 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+PROJECT_ROOT = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(PROJECT_ROOT, 'apps'))
+
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -33,6 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'fio',
+    'reporting',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -41,9 +48,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'veles.urls'
@@ -89,7 +98,7 @@ USE_TZ = True
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
+DATABASES['default'] = dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -108,3 +117,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from reporting.views import DashboardView
+from fio.views import LoginView, LogOutView, RegistrationView
+
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/$', LoginView.as_view(), name='login'),
+    url(r'^logout/$', LogOutView.as_view(), name='logout'),
+    url(r'^register/$', RegistrationView.as_view(), name='register'),
+    url(r'^$', DashboardView.as_view(), name='dashboard'),
 ]
