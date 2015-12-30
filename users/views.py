@@ -1,9 +1,10 @@
-from django.views import generic
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse_lazy
+from django.views import generic
 
-from fio.forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm
+from .models import User
+from .token import decrypt_token
 
 
 class LoginView(generic.FormView):
@@ -18,16 +19,16 @@ class LoginView(generic.FormView):
 
         if user is not None and user.is_active:
             login(self.request, user)
+            self.request.session['fio_token'] = decrypt_token(user.token, password).decode('utf-8')
             return super(LoginView, self).form_valid(form)
         else:
             return self.form_invalid(form)
 
 
 class LogOutView(generic.RedirectView):
-    url = reverse_lazy('login')
 
     def get(self, request, *args, **kwargs):
-        # TODO delete FIO token from session or the whole session
+        del self.request.session['fio_token']
         logout(request)
         return super(LogOutView, self).get(request, *args, **kwargs)
 

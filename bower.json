@@ -1,0 +1,8 @@
+{
+    "name": "moje-inkaso-api",
+    "version": "0.16.4",
+    "dependencies": {
+        "bootstrap-css": "3.3.4",
+        "jquery": "2.1.4"
+    }
+}

@@ -16,6 +16,10 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import sys
 
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '#y&mb4cywo5!+@ctucc$-nub+(f)dq8lid!qvjm^)f-5oy2uk6'
 
@@ -37,7 +41,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'fio',
+    'django_extensions',
+    'users',
     'reporting',
     'crispy_forms',
 )
@@ -60,7 +65,9 @@ ROOT_URLCONF = 'veles.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join('veles', 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,6 +79,7 @@ TEMPLATES = [
         },
     },
 ]
+AUTH_USER_MODEL = 'users.User'
 
 WSGI_APPLICATION = 'veles.wsgi.application'
 
@@ -96,8 +104,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Parse database configuration from $DATABASE_URL
-import dj_database_url
 DATABASES['default'] = dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
@@ -111,10 +117,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, '..', 'bower_components'),
     os.path.join(BASE_DIR, 'static'),
 )
 

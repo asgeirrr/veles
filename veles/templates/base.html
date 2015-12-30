@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html>
+    <head>
+        <title>Veles</title>
+        <link href="{% static 'bootstrap-css/css/bootstrap.min.css' %}" rel="stylesheet">
+        <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static 'bootstrap-css/js/bootstrap.min.js' %}"></script>
+    </head>
+
+    <body>
+        {% block body_block %}This is body_block's default content.{% endblock %}
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

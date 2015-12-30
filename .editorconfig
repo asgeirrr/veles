@@ -1,0 +1,44 @@
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+# editorconfig.org
+
+root = true
+
+
+[*]
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+[*.py]
+indent_style = space
+indent_size = 4
+line_length=120
+known_third_party=cryptography,requests,responses
+multi_line_output=0
+lines_after_imports=2
+known_django=django
+known_reporting=reporting
+known_users=users
+sections=FUTURE,STDLIB,THIRDPARTY,DJANGO,REPORTING,USERS,FIRSTPARTY,LOCALFOLDER
+
+[*.{html,sass}]
+indent_style = space
+indent_size = 2
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+[*.yaml]
+indent_style = space
+indent_size = 2
+
+# Tab indentation (no size specified)
+[*.coffee]
+
+[*.md]
+trim_trailing_whitespace = false

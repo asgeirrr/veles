@@ -1,12 +1,17 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.utils.translation import ugettext as _
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.utils.translation import ugettext as _, ugettext
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, ButtonHolder, Submit
+from crispy_forms.layout import Layout, Submit
+from crispy_forms.bootstrap import FormActions
+
+from .models import User
+from .token import encrypt_token
 
 
 class LoginForm(AuthenticationForm):
+
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
 
@@ -14,7 +19,7 @@ class LoginForm(AuthenticationForm):
         self.helper.layout = Layout(
             'username',
             'password',
-            ButtonHolder(
+            FormActions(
                 Submit('login', _('Login'), css_class='btn-primary')
             )
 
@@ -22,8 +27,6 @@ class LoginForm(AuthenticationForm):
 
 
 class RegistrationForm(UserCreationForm):
-
-    fio_token = forms.CharField(label=_('FIO token'), min_length=64, max_length=64)
 
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
@@ -33,9 +36,17 @@ class RegistrationForm(UserCreationForm):
             'username',
             'password1',
             'password2',
-            'fio_token',
-            ButtonHolder(
-                Submit('register', _('Register'), css_class='btn-primary')
+            'token',
+            FormActions(
+                Submit('register', ugettext('Register'), css_class='btn-primary')
             )
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data['token'] = encrypt_token(cleaned_data['token'], cleaned_data['password1'])
+        return cleaned_data
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'token')
