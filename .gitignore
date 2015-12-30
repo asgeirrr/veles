@@ -62,3 +62,6 @@ venv
 *.pyc
 staticfiles
 .directory
+
+# Vim swap files
+*.swp
