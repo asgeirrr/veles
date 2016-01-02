@@ -1,9 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import FormView
-from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .fio import import_transactions
 from .forms import DownloadTransactionsForm
-from .fio import download_transactions
 
 
 class DashboardView(LoginRequiredMixin, FormView):
@@ -13,5 +13,5 @@ class DashboardView(LoginRequiredMixin, FormView):
     login_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        download_transactions(self.request.user)
+        import_transactions(self.request)
         return super(DashboardView, self).form_valid(form)

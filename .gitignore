@@ -65,3 +65,7 @@ staticfiles
 
 # Vim swap files
 *.swp
+
+# Downloaded assets
+bower_components
+node_modules

@@ -19,6 +19,8 @@ import sys
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 
+from django.contrib.messages import constants as message_constants
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '#y&mb4cywo5!+@ctucc$-nub+(f)dq8lid!qvjm^)f-5oy2uk6'
@@ -60,13 +62,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
 )
 
-ROOT_URLCONF = 'veles.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join('veles', 'templates'),
+            os.path.join('core', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -81,7 +83,7 @@ TEMPLATES = [
 ]
 AUTH_USER_MODEL = 'users.User'
 
-WSGI_APPLICATION = 'veles.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
@@ -125,3 +127,11 @@ STATICFILES_DIRS = (
 )
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+MESSAGE_TAGS = {
+    message_constants.DEBUG: 'debug',
+    message_constants.INFO: 'info',
+    message_constants.SUCCESS: 'success',
+    message_constants.WARNING: 'warning',
+    message_constants.ERROR: 'danger',
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html>
+  <head>
+    <title>Veles</title>
+    <link href="{% static 'bootstrap-css/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap-css/js/bootstrap.min.js' %}"></script>
+  </head>
+
+  <body>
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert alert-dismissible alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block body_block %}This is body_block's default content.{% endblock %}
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>
