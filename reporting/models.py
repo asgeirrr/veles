@@ -1,17 +1,34 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from users.models import User
+
 
 class Category(models.Model):
 
+    user = models.ForeignKey(User, verbose_name=_('user'), null=False, blank=False, related_name='categories')
     name = models.CharField(verbose_name=_('name'), null=False, blank=False, max_length=255)
     monthly_limit = models.PositiveIntegerField(verbose_name=_('monthly limit'), null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _('category')
+        verbose_name_plural = _('categories')
 
 
 class Keyword(models.Model):
 
     category = models.ForeignKey(Category, verbose_name=_('category'), null=False, blank=False, related_name='keywords')
     word = models.CharField(verbose_name=_('word'), null=False, blank=False, max_length=255)
+
+    def __str__(self):
+        return self.word
+
+    class Meta:
+        verbose_name = _('keyword')
+        verbose_name_plural = _('keywords')
 
 
 class Transaction(models.Model):
@@ -39,6 +56,7 @@ class Transaction(models.Model):
     )
 
     date = models.DateField(verbose_name=_('date'), null=False, blank=False)
+    user = models.ForeignKey(User, verbose_name=_('user'), null=False, blank=False, related_name='transactions')
     amount = models.DecimalField(verbose_name=_('amount'), decimal_places=2, max_digits=12, null=False, blank=False)
     account_number = models.CharField(verbose_name=_('account number'), max_length=18, null=True, blank=True)
     bank_code = models.CharField(verbose_name=_('bank code'), max_length=6, null=True, blank=True)
@@ -52,3 +70,10 @@ class Transaction(models.Model):
 
     category = models.ForeignKey(Category, verbose_name=_('category'), null=True, blank=True,
                                  related_name='transactions')
+
+    def __str__(self):
+        return '{} {} {}'.format(self.date, self.amount, self.category)
+
+    class Meta:
+        verbose_name = _('transaction')
+        verbose_name_plural = _('transactions')

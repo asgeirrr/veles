@@ -66,7 +66,7 @@ FIO_TO_PYTHON = {
     'account_number': str,
     'bank_code': str,
     'identification': str,
-    'kind': lambda kind: FIO_KIND_MAPPING.get(kind, Transaction.KIND_OTHER), # TODO,
+    'kind': lambda kind: FIO_KIND_MAPPING.get(kind, Transaction.KIND_OTHER),
     'account_name': str,
     'bank_name': str,
     'currency': lambda currency: FIO_CURRENCY_MAPPING.get(currency, Transaction.CURRENCY_CZK),
@@ -79,10 +79,12 @@ def convert_transaction_to_django(transaction_dict):
                        if field and field['id'] in FIO_FIELD_MAPPING.keys()}
     return Transaction(**{k: FIO_TO_PYTHON[k](v) for k, v in raw_dict_values.items()})
 
+
 def convert_transactions_to_django(json_response):
     account_statement = json.loads(json_response)['accountStatement']
     transactions = account_statement['transactionList']['transaction']
     return [convert_transaction_to_django(t) for t in transactions]
+
 
 def import_transactions(request):
     token = request.session.get('fio_token')
@@ -96,9 +98,11 @@ def import_transactions(request):
 
     if response.status_code == 200:
         transactions = convert_transactions_to_django(response.text)
+        [setattr(t, 'user', request.user) for t in transactions]
         Transaction.objects.bulk_create(transactions)
         request.user.last_sync = date.today()
         request.user.save()
+        messages.add_message(request, messages.SUCCESS, ugettext('Imported {} transactions.').format(len(transactions)))
         return transactions
     else:
         messages.add_message(request, messages.ERROR, ugettext('Response code from FIO: {}').format(response.code))
