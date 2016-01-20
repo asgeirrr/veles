@@ -15,3 +15,8 @@ class User(AbstractUser):
 
     def get_full_name(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        if not self.is_staff and not self.is_superuser:
+            self.is_staff = True
+        super().save(*args, **kwargs)

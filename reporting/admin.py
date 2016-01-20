@@ -2,16 +2,14 @@ from django.contrib import admin
 
 from .models import Category, Keyword, Transaction
 
+from utils.auth import AllowStaffMixin, FilterOwnObjectsMixin
+
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(FilterOwnObjectsMixin, AllowStaffMixin, admin.ModelAdmin):
 
     fields = ('name', 'monthly_limit')
     list_display = ('name', 'monthly_limit')
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(user=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.user = request.user
@@ -19,25 +17,17 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Keyword)
-class KeywordAdmin(admin.ModelAdmin):
+class KeywordAdmin(FilterOwnObjectsMixin, AllowStaffMixin, admin.ModelAdmin):
 
     list_display = ('word', 'category')
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(category__user=request.user)
-
 
 @admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
+class TransactionAdmin(FilterOwnObjectsMixin, admin.ModelAdmin):
 
     readonly_fields = ('date', 'amount', 'account_number', 'bank_code', 'identification', 'recipient_message', 'kind')
     fields = readonly_fields + ('category',)
     list_display = fields
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(user=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.user = request.user
@@ -46,5 +36,11 @@ class TransactionAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request):
+    def has_change_permission(self, request, obj=None):
+        return True
+
+    def has_delete_permission(self, request, obj=None):
         return False
+
+    def has_module_permission(self, request):
+        return True
